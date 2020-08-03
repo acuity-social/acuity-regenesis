@@ -1,5 +1,6 @@
 let Api = require('@parity/api')
 import Web3 from 'web3'
+import net from 'net'
 
 async function start() {
   let provider = new Api.Provider.Http(process.env.HTTP_URL)
@@ -7,6 +8,10 @@ async function start() {
   let web3: any
 
   switch(process.env.WEB3_TYPE) {
+    case 'IPC':
+      web3 = new Web3(new Web3.providers.IpcProvider(process.env.IPC_PATH!, net))
+      break
+
     case 'HTTP':
       web3 = new Web3(new Web3.providers.HttpProvider(process.env.HTTP_URL!))
       break
