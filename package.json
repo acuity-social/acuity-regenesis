@@ -17,7 +17,8 @@
   "homepage": "https://github.com/acuity-social/acuity-regenesis#readme",
   "dependencies": {
     "@parity/api": "^5.1.19",
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "web3": "^1.2.11"
   },
   "devDependencies": {
     "@types/node": "^14.0.27"
