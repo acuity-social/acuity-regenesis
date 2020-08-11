@@ -23,21 +23,26 @@ async function start() {
   let accounts
   let start = '0x0000000000000000000000000000000000000000'
   let total = 0
+  let existential = web3.utils.toBN(web3.utils.toWei('0.001'))
+  let regenesis = []
   do {
     accounts = await api.parity.listAccounts(10000, start, blockNumber)
 
     for (let account of accounts) {
-      let balance = await web3.eth.getBalance(account, blockNumber)
-        if (balance != 0) {
+      let balance = web3.utils.toBN(await web3.eth.getBalance(account, blockNumber))
+        if (balance.gte(existential)) {
           console.log(account, web3.utils.fromWei(balance))
+          regenesis.push({address: account, balance: balance})
         }
     }
 
     start = accounts[accounts.length - 1]
     total += accounts.length
-    console.log(total.toLocaleString())
+    console.log(regenesis.length.toLocaleString() + ' / ' + total.toLocaleString())
   }
   while (accounts.length == 10000)
+
+  process.exit(0)
 }
 
 start()
