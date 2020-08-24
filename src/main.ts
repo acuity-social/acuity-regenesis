@@ -36,7 +36,7 @@ async function start() {
       if (balance.gte(existential)) {
         console.log(account, web3.utils.fromWei(balance))
         claims.push({EthereumAddress: account, BalanceOf: balance.toString()})
-        totalBalance.add(balance)
+        totalBalance = totalBalance.add(balance)
       }
     }
 
@@ -47,6 +47,7 @@ async function start() {
 
   console.log('Total ACU: ', web3.utils.fromWei(totalBalance))
   fs.writeFileSync('claims.json', JSON.stringify(claims))
+  console.log('claims.json written.')
   process.exit(0)
 }
 
