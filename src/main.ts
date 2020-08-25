@@ -25,8 +25,8 @@ async function start() {
   let total = 0
   let totalBalance = web3.utils.toBN(0)
   let existential = web3.utils.toBN(web3.utils.toWei('0.001'))
-  let claims = []
-  let accountsPromise: Promise<String[]> = api.parity.listAccounts(10000, '0x0000000000000000000000000000000000000000', blockNumber)
+  let claims: any[] = []
+  let accountsPromise: Promise<String[]> = api.parity.listAccounts(10000, null, blockNumber)
   do {
     accounts = await accountsPromise
     accountsPromise = api.parity.listAccounts(10000, accounts[accounts.length - 1], blockNumber)
