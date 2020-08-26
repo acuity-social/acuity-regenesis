@@ -26,10 +26,10 @@ async function start() {
   let totalBalance = web3.utils.toBN(0)
   let existential = web3.utils.toBN(web3.utils.toWei('0.001'))
   let claims: any[] = []
-  let accountsPromise: Promise<String[]> = api.parity.listAccounts(10000, null, blockNumber)
+  let accountsPromise: Promise<String[]> = api.parity.listAccounts(5000, null, blockNumber)
   do {
     accounts = await accountsPromise
-    accountsPromise = api.parity.listAccounts(10000, accounts[accounts.length - 1], blockNumber)
+    accountsPromise = api.parity.listAccounts(5000, accounts[accounts.length - 1], blockNumber)
 
     for (let account of accounts) {
       let balance = web3.utils.toBN(await web3.eth.getBalance(account, blockNumber))
@@ -43,7 +43,7 @@ async function start() {
     total += accounts.length
     console.log(claims.length.toLocaleString() + ' / ' + total.toLocaleString())
   }
-  while (accounts.length == 10000)
+  while (accounts.length == 5000)
 
   console.log('Total ACU: ', web3.utils.fromWei(totalBalance))
   fs.writeFileSync('claims.json', JSON.stringify(claims))
