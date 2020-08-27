@@ -4,32 +4,23 @@ import net from 'net'
 import fs from 'fs'
 
 async function start() {
-  let provider = new Api.Provider.Http(process.env.HTTP_URL)
+  let provider = new Api.Provider.Ws(process.env.WS_URL)
   let api = new Api(provider)
-  let web3: any
-
-  switch(process.env.WEB3_TYPE) {
-    case 'IPC':
-      web3 = new Web3(new Web3.providers.IpcProvider(process.env.IPC_PATH!, net))
-      break
-
-    case 'HTTP':
-      web3 = new Web3(new Web3.providers.HttpProvider(process.env.HTTP_URL!))
-      break
-  }
+  let web3: any = new Web3(new Web3.providers.IpcProvider(process.env.IPC_PATH!, net))
 
   let blockNumber = await web3.eth.getBlockNumber()
   console.log('Block:', blockNumber.toLocaleString())
 
+  let querySize = 100000
   let accounts
   let total = 0
   let totalBalance = web3.utils.toBN(0)
   let existential = web3.utils.toBN(web3.utils.toWei('0.001'))
   let claims: any[] = []
-  let accountsPromise: Promise<String[]> = api.parity.listAccounts(5000, null, blockNumber)
+  let accountsPromise: Promise<String[]> = api.parity.listAccounts(querySize, null, blockNumber)
   do {
     accounts = await accountsPromise
-    accountsPromise = api.parity.listAccounts(5000, accounts[accounts.length - 1], blockNumber)
+    accountsPromise = api.parity.listAccounts(querySize, accounts[accounts.length - 1], blockNumber)
 
     for (let account of accounts) {
       let balance = web3.utils.toBN(await web3.eth.getBalance(account, blockNumber))
@@ -43,7 +34,7 @@ async function start() {
     total += accounts.length
     console.log(claims.length.toLocaleString() + ' / ' + total.toLocaleString())
   }
-  while (accounts.length == 5000)
+  while (accounts.length == querySize)
 
   console.log('Total ACU: ', web3.utils.fromWei(totalBalance))
   fs.writeFileSync('claims.json', JSON.stringify(claims))
