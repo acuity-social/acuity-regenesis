@@ -20,6 +20,7 @@ async function start() {
   let accountsPromise: Promise<String[]> = api.parity.listAccounts(querySize, null, blockNumber)
   do {
     accounts = await accountsPromise
+    console.log(accounts.length.toLocaleString() + ' accounts received.')
     accountsPromise = api.parity.listAccounts(querySize, accounts[accounts.length - 1], blockNumber)
 
     for (let account of accounts) {
