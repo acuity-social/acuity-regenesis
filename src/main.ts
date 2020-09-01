@@ -8,7 +8,7 @@ async function start() {
   let api = new Api(provider)
   let web3: any = new Web3(new Web3.providers.IpcProvider(process.env.IPC_PATH!, net))
 
-  let blockNumber = await web3.eth.getBlockNumber()
+  let blockNumber: number = parseInt(process.env.BLOCK_NUMBER!)
   console.log('Block:', blockNumber.toLocaleString())
 
   let querySize = 100000
