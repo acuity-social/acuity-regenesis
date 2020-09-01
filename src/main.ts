@@ -16,8 +16,9 @@ async function start() {
   let total = 0
   let totalBalance = web3.utils.toBN(0)
   let existential = web3.utils.toBN(web3.utils.toWei('0.001'))
-  let claims: any[] = []
-  let accountsPromise: Promise<String[]> = api.parity.listAccounts(querySize, null, blockNumber)
+  let claims: {[key: string]: string} = {}
+  let totalClaims = 0
+  let accountsPromise = api.parity.listAccounts(querySize, null, blockNumber)
   do {
     accounts = await accountsPromise
     console.log(accounts.length.toLocaleString() + ' accounts received.')
@@ -27,13 +28,14 @@ async function start() {
       let balance = web3.utils.toBN(await web3.eth.getBalance(account, blockNumber))
       if (balance.gte(existential)) {
         console.log(account, web3.utils.fromWei(balance))
-        claims.push({EthereumAddress: account, BalanceOf: balance.toString()})
+        claims[account] = balance.toString()
+        totalClaims++
         totalBalance = totalBalance.add(balance)
       }
     }
 
     total += accounts.length
-    console.log(claims.length.toLocaleString() + ' / ' + total.toLocaleString())
+    console.log(totalClaims.toLocaleString() + ' / ' + total.toLocaleString())
   }
   while (accounts.length == querySize)
 
